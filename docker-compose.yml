@@ -1,6 +1,7 @@
 version: "3.8"
 services:
- stop_game:
+  
+  stop_game:
     build: .
     working_dir: /app
     container_name: stop_game
@@ -15,3 +16,24 @@ services:
     tty: true
     init: true
     command: yarn dev
+  
+  node_server:
+    image: node:14
+    container_name: node_server
+    working_dir: /app
+    volumes:
+      - ./server:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    command: npm start
+    # command: npm run start:ts
+  #   depends_on:
+  #     - redis
+
+  # redis:
+  #   image: redis:latest
+  #   container_name: redis
+  #   ports:
+  #     - "6379:6379"

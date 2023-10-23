@@ -5,7 +5,7 @@ DOCKER_NAME=stop_game
 DOCKER_COMPOSE?=docker-compose
 DOCKER=docker
 DOCKER_EXEC_TOOLS_APP=$(CURRENT_USER) docker exec -it $(DOCKER_NAME) sh
-NODE_INSTALL="yarn i"
+NODE_INSTALL="yarn add"
 SERVER_RUN="yarn dev"
 
 
