@@ -31,6 +31,13 @@ function getLetter(){
 }
 const users = []
 
+// interface User {
+//  name: string
+//  ok: boolean
+//  points: number
+// }
+
+
 io.on('connection', (socket) => {
   const room = getRoom()
   socket.emit('room', room)
@@ -39,11 +46,22 @@ io.on('connection', (socket) => {
   socket.emit('letter', letter)
 
   socket.on('connectToRoom', (user) => {
-    console.log({user})
+    const find = users.find(element => element === user)
+    if (find) {
+      socket.emit('User exist')
+    }
     users.push(user)
   })
 
   socket.emit('usersConnected', users)
+
+  socket.on('sendAnswers', (answers, user) => {
+
+  })
+
+
+
+  // const startGame = users.every((user) => user.ok)
 
   socket.on('startGame', () => {
       console.log('startGame')
@@ -53,12 +71,12 @@ io.on('connection', (socket) => {
       // emit every secounds to show timer
   })
 
-    socket.on('stopGame', () => {
-        // stop time
-        // disabled every field
-    })
+  socket.on('stopGame', () => {
+      // stop time
+      // disabled every field
+  })
 
-    // socket.disconnect();
+  // socket.disconnect();
 });
 
 server.listen(3000, () => {

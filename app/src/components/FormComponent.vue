@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { formFields } from '@/types'
-import Button from './Button.vue';
+import Button from './ButtonComponent.vue';
 import InputField from './InputField.vue';
 import { ref } from 'vue';
 

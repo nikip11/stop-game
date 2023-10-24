@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Button from './Button.vue';
+import Button from './ButtonComponent.vue';
 import { letters, selectRandomLetter } from '@/types'
 
 const letter = ref<string | null>(null)
