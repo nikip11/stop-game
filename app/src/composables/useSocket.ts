@@ -15,6 +15,7 @@ type ResponseSocket = {
   connectUser: (user: User) => void,
   connectToRoom: (user: User, room: string) => void
   userPrepared: (user: User) => void
+  disconnectUser: (user: User) => void
 }
 
 const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000"
@@ -54,6 +55,10 @@ export function useSocket(): ResponseSocket {
     socket.emit('connectUser', user)
   }
 
+  const disconnectUser = (user: User) => {
+    socket.emit('disconnectUser', user)
+  }
+
   const connectToRoom = (user: User, room: string) => {
     console.log({user, room})
     socket.emit('connectToRoom', user)
@@ -67,6 +72,7 @@ export function useSocket(): ResponseSocket {
     state,
     connectUser,
     connectToRoom,
+    disconnectUser,
     userPrepared
   }
 }

@@ -51,12 +51,17 @@ io.on('connection', (socket) => {
       socket.emit('User exist')
     }
     users.push(user)
+    console.log({users})
   })
 
   socket.emit('usersConnected', users)
 
   socket.on('sendAnswers', (answers, user) => {
 
+  })
+
+  socket.on('disconnectUser', (user) => {
+    users.splice(user, 1)
   })
 
 

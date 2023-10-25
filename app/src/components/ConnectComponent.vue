@@ -7,11 +7,12 @@
     <div id="room">{{ room }}</div>
 
     <br>
-    <div v-if="user">
+    <div v-if="!showForm">
       Hola, {{ user }}
+      <button @click="handleRemoveUser">no eres tu?</button>
     </div>
     <div v-else class="dflex">
-      <input type="text" id="user" v-model="name">
+      <input type="text" id="user" v-model="user">
       <Button @click.once="handleConnectToRoom()">Conectar</Button>
     </div>
     <ConnectedUsersComponent :users="users" />
@@ -20,37 +21,30 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-// import { socket, state } from '@/plugins/socket';
 import { useSocket } from '@/composables/useSocket.ts'
-import { useLocalStorage } from '@/composables/useLocalStorage'
+import { useStorage } from '@/composables/useStorage'
 import ConnectedUsersComponent from './ConnectedUsersComponent.vue';
 
-const { state, connectUser, connectToRoom } = useSocket()
-const { setter, getter, clear } = useLocalStorage()
+const { state, connectUser, connectToRoom, disconnectUser } = useSocket()
 
-const name = ref('')
+const user = useStorage('user')
+
+const showForm = ref(!user.value)
 
 const connected = computed(() => state.connected)
 const letter = computed(() => state.letter)
 const room = computed(() => state.room)
 const users = computed(() => state.connectedUsers)
-const user = computed(() => getter('user'))
 
-
-const u = users.value.find((u) => u === user.value)
-  if (!u) {
-    clear()
-  }
-
+function handleRemoveUser() {
+  disconnectUser(user.value)
+  showForm.value = true
+  user.value = ''
+}
 
 function handleConnectToRoom() {
-  // save user on localstorage
-  // save room on localstorage
-  console.log({room})
-  setter('user', name.value)
-  setter('room', room)
-  connectToRoom(name.value, room)
-  connectUser(name.value)
+  showForm.value = false
+  connectToRoom(user.value, room)
 }
 
 </script>
