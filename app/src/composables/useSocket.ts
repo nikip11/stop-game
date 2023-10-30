@@ -1,10 +1,12 @@
+import { useTimerStore } from "@/store/useTimerStore"
 import { User } from "@/types"
 import { io } from "socket.io-client"
-import { reactive } from "vue"
+import { reactive, ref } from "vue"
 
 type StateProps = {
   connected: boolean
   letter: string | null
+  seconds: number
   room: string | null
   start: () => void
   connectedUsers: []
@@ -16,14 +18,19 @@ type ResponseSocket = {
   connectToRoom: (user: User, room: string) => void
   userPrepared: (user: User) => void
   disconnectUser: (user: User) => void
+  start: () => void
+  stop: () => void
 }
 
 const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000"
 
 export function useSocket(): ResponseSocket {
+  const store = useTimerStore()
+
   const state = reactive<StateProps>({
     connected: false,
     letter: null,
+    seconds: 0,
     room: null,
     start: () => {},
     connectedUsers: []
@@ -41,11 +48,27 @@ export function useSocket(): ResponseSocket {
 
   socket.on('letter', (args: string) => {
     state.letter = args
+    store.setLetter(args)
   })
 
-  socket.on('room', (args: string) => {
-    state.room = args
+  socket.on('seconds', (args: number) => {
+    state.seconds = args
+    store.setSeconds(args)
+    console.log('seconds', args)
   })
+
+  const start = () => {
+    console.log('start from vue')
+    socket.emit('start')
+  }
+
+  const stop = () => {
+    socket.emit('stop')
+  }
+
+  // socket.on('room', (args: string) => {
+  //   state.room = args
+  // })
 
   socket.on('usersConnected', (args) => {
     state.connectedUsers = args
@@ -70,6 +93,8 @@ export function useSocket(): ResponseSocket {
 
   return {
     state,
+    stop,
+    start,
     connectUser,
     connectToRoom,
     disconnectUser,

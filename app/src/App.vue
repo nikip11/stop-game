@@ -1,12 +1,19 @@
 <template>
   <Paper>
-    <WelcomeComponent v-if="showForm"/>
+    <!-- step 1 -->
+    {{ connected }}
+    <WelcomeComponent />
+    <!-- step 2 -->
     <ConnectComponent />
-
+    <StartPageComponent @start="handleStart"/>
+    <!-- step 3 -->
+    <GameComponent  />
+    <!-- step 4 -->
+    <FormComponent @stop="handleStop" :disabled="disabled" />
+    <!-- step 5 -->
+    <h1>{{ points }}</h1>
     <div v-if="showForm">
-      <TimerComponent :start="startTime" :stop="stopTime" />
-      <StartPageComponent @start="start"/>
-      <FormComponent @stop="stop" />
+      <TestComponent />
     </div>
   </Paper>
 </template>
@@ -14,24 +21,36 @@
 <script setup lang="ts">
 import FormComponent from '@/components/FormComponent.vue'
 import StartPageComponent from './components/StartPageComponent.vue'
-import TimerComponent from './components/TimerComponent.vue';
-import { ref } from 'vue';
+import GameComponent from '@/components/GameComponent.vue'
+import TestComponent from '@/components/TestComponent.vue'
+import { computed, ref } from 'vue';
 import ConnectComponent from '@/components/ConnectComponent.vue'
 import Paper from '@/components/PaperComponent.vue'
 import WelcomeComponent from './components/WelcomeComponent.vue';
+import { useSocket } from './composables/useSocket';
 
-const startTime = ref(false)
-const stopTime = ref(false)
+const { stop, start, state } = useSocket()
+
+const disabled = ref(false)
+const connected = computed(() => state.connected)
 
 const showForm = ref(false)
 
+const points = ref(0)
 
-function start() {
-  startTime.value = true
+function handleStart() {
+  disabled.value = false
+  start()
 }
 
-function stop() {
-  stopTime.value = true
+function handleStop() {
+  disabled.value = true
+  stop()
+  calculateResult()
+}
+
+function calculateResult() {
+
 }
 
 

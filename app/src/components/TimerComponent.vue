@@ -1,57 +1,32 @@
 <template>
-<div id="timer" v-if="show">
-    {{ seconds }}<span>seg</span>
+  <!-- <div id="timer" v-if="seconds"> -->
+<div id="timer">
+    {{ seconds }}
 </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { useTimerStore } from '@/store/useTimerStore';
+import { computed } from 'vue';
 
-const props = defineProps<{start: boolean, stop: boolean}>()
-
-const seconds = ref(0)
-const show = ref(false)
-const timer = ref<ReturnType<typeof setInterval> | null>(null)
-
-const startTimer = () => {
-  if (timer.value === null) {
-    show.value = true
-    timer.value = setInterval(() => {
-        seconds.value++;
-    }, 1000);
-  }
-}
-
-watch(() => props.start, (newValue) => {
-    if (newValue) {
-        startTimer()
-    }
-})
-watch(() => props.stop, (newValue) => {
-    if (newValue) {
-        stopTimer()
-    }
-})
-
-const stopTimer = () => {
-    clearInterval(timer.value)
-}
-
-// clearInterval
+const store = useTimerStore()
+const seconds = computed(() => store.getSeconds)
 
 </script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap');
 #timer {
-    position: absolute;
+    /* position: absolute;
     top: 0;
-    right: 0;
+    right: 0; */
     padding: 25px;
     background-color: var(--primary);
     color: var(--white);
     font-size: 2em;
     font-family: 'Tilt Neon', sans-serif;
+    position: sticky;
+    display: flex;
 }
 
 #timer span {

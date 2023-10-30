@@ -8,7 +8,7 @@ defineProps<{users: []}>()
   </ul>
 </template>
 
-<style>
+<style scoped>
 h2 {
   margin-bottom: 0px;
 }

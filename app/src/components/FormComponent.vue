@@ -1,23 +1,24 @@
 <template>
-    <div class="form">
-        <div v-for="field in formFields" :key="field">
-            <InputField :id="field" :disabled="disabled" />
-        </div>
-        <Button @click="stop">Stop</Button>
+  <div class="form page">
+    <form @submit.prevent="submitForm">
+    <InputField :id="field" :disabled="disabled" v-for="field in formFields" :key="field"/>
+    <div style="margin-top: 20px">
+      <Button type="submit">Stop</Button>
     </div>
+  </form>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { formFields } from '@/types'
 import Button from './ButtonComponent.vue';
 import InputField from './InputField.vue';
-import { ref } from 'vue';
 
-const disabled = ref(false)
+const { disabled } = defineProps<{disabled: boolean}>()
+
 const emit = defineEmits(['stop'])
 
-function stop() {
-    disabled.value = true
+function submitForm() {
     emit('stop')
 }
 
@@ -30,4 +31,5 @@ function stop() {
     align-items: center;
     justify-content: center;
 }
+
 </style>

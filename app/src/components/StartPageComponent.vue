@@ -1,31 +1,17 @@
 <template>
-    <Button @click="pickLetter">Empezar</Button>
-    <h1>{{ letter }}</h1>
-    <h1>{{ time }}</h1>
-
+  <div class="page">
+    <h1>Preparados</h1>
+    <Button @click.once="pickLetter">Empezar</Button>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import Button from './ButtonComponent.vue';
-import { letters, selectRandomLetter } from '@/types'
-
-const letter = ref<string | null>(null)
-const time = ref<string | null>(null)
-
 const emit = defineEmits(['start'])
 
 function pickLetter() {
-    letter.value = selectRandomLetter(letters)
     emit('start')
 }
-
-// function setTime() {
-//     const t = setInterval(() => {
-
-//     }, 1000)
-// }
-
 
 </script>
 

@@ -1,12 +1,11 @@
 <template>
   <div class="page" >
-    {{ connected }}
-    <div id="letter">{{ letter }}</div>
+    <!-- <LetterComponent :letter="letter" v-if="letter" /> -->
 
-    <div>Sala:</div>
-    <div id="room">{{ room }}</div>
+    <!-- <div>Sala:</div>
+    <div id="room">{{ room }}</div> <br>-->
 
-    <br>
+
     <div v-if="!showForm">
       Hola, {{ user }}
       <button @click="handleRemoveUser">no eres tu?</button>
@@ -15,26 +14,41 @@
       <input type="text" id="user" v-model="user">
       <Button @click.once="handleConnectToRoom()">Conectar</Button>
     </div>
-    <ConnectedUsersComponent :users="users" />
+    <ConnectedUsersComponent :users="connectedUsers" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, toRefs, watch } from 'vue'
 import { useSocket } from '@/composables/useSocket.ts'
 import { useStorage } from '@/composables/useStorage'
 import ConnectedUsersComponent from './ConnectedUsersComponent.vue';
 
-const { state, connectUser, connectToRoom, disconnectUser } = useSocket()
+import Button from '@/components/ButtonComponent.vue';
+
+const { state, connectToRoom, disconnectUser } = useSocket()
+
+const { connectedUsers } = toRefs(state)
 
 const user = useStorage('user')
 
 const showForm = ref(!user.value)
 
-const connected = computed(() => state.connected)
-const letter = computed(() => state.letter)
+// const connected = computed(() => state.connected)
+// const letter = computed(() => state.letter)
 const room = computed(() => state.room)
-const users = computed(() => state.connectedUsers)
+const users = ref(computed(() => state.connectedUsers))
+
+onMounted(() => {
+  checkIfUserIsConected()
+})
+
+function checkIfUserIsConected() {
+  const userConected = users.value.find(u => u === user)
+  if (!userConected) {
+    handleRemoveUser()
+  }
+}
 
 function handleRemoveUser() {
   disconnectUser(user.value)
@@ -46,6 +60,9 @@ function handleConnectToRoom() {
   showForm.value = false
   connectToRoom(user.value, room)
 }
+
+// TODO
+// valid input form
 
 </script>
 
@@ -65,18 +82,6 @@ function handleConnectToRoom() {
   font-size: 4em;
   font-weight: bold;
   line-height: 40px;
-}
-#letter {
-  font-size: 7em;
-    text-transform: uppercase;
-    background-color: steelblue;
-    color: white;
-    padding: 30px;
-    width: 75px;
-    height: 75px;
-    line-height: 52px;
-    text-align: center;
-    margin: 25px 0px;
 }
 .dflex {
   text-align: center;
