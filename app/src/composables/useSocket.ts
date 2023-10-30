@@ -10,6 +10,7 @@ type StateProps = {
   room: string | null
   start: () => void
   connectedUsers: []
+  disabled: boolean
 }
 
 type ResponseSocket = {
@@ -23,6 +24,7 @@ type ResponseSocket = {
 }
 
 const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000"
+const socket = io(URL)
 
 export function useSocket(): ResponseSocket {
   const store = useTimerStore()
@@ -33,10 +35,10 @@ export function useSocket(): ResponseSocket {
     seconds: 0,
     room: null,
     start: () => {},
-    connectedUsers: []
+    connectedUsers: [],
+    disabled: false
   })
 
-  const socket = io(URL)
 
   socket.on('connect', () => {
     state.connected = true
@@ -60,11 +62,16 @@ export function useSocket(): ResponseSocket {
   const start = () => {
     console.log('start from vue')
     socket.emit('start')
+    state.disabled = false
   }
 
   const stop = () => {
     socket.emit('stop')
   }
+
+  socket.on('stopGame', () => {
+    state.disabled = true
+  })
 
   // socket.on('room', (args: string) => {
   //   state.room = args

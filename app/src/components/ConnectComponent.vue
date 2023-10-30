@@ -28,7 +28,9 @@ import Button from '@/components/ButtonComponent.vue';
 
 const { state, connectToRoom, disconnectUser } = useSocket()
 
-const { connectedUsers } = toRefs(state)
+
+const connectedUsers = computed(() => state.connectedUsers)
+// const { connectedUsers } = toRefs(state)
 
 const user = useStorage('user')
 

@@ -31,20 +31,20 @@ import { useSocket } from './composables/useSocket';
 
 const { stop, start, state } = useSocket()
 
-const disabled = ref(false)
+// const disabled = ref(false)
 const connected = computed(() => state.connected)
+
+const disabled = computed(() => state.disabled)
 
 const showForm = ref(false)
 
 const points = ref(0)
 
 function handleStart() {
-  disabled.value = false
   start()
 }
 
 function handleStop() {
-  disabled.value = true
   stop()
   calculateResult()
 }

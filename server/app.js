@@ -1,19 +1,13 @@
 const express = require('express');
 const http = require('http');
-const { Server } = require('socket.io');
 const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-// const io = new Server(server, {
-//     cors: {
-//         origin: "http://localhost:8000"
-//     }
-// })
 
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:8000"
+    origin: "*"
   }
 })
 
@@ -31,7 +25,6 @@ function getRoom() {
 }
 
 const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-
 function getLetter(){
   const randomIndex = Math.floor(Math.random() * letters.length);
   return letters[randomIndex];
@@ -54,7 +47,7 @@ io.on('connection', (socket) => {
   // const letter = getLetter()
   // socket.emit('letter', letter)
 
-  socket.emit('usersConnected', users)
+  io.emit('usersConnected', users)
 
   socket.on('connectToRoom', (user) => {
     const find = users.find(element => element === user)
@@ -62,23 +55,20 @@ io.on('connection', (socket) => {
       socket.emit('User exist')
     }
     users.push(user)
-    console.log({users})
-    socket.emit('usersConnected', users)
+    io.emit('usersConnected', users)
   })
 
 
-  // socket.on('sendAnswers', (answers, user) => {
-
-  // })
+  // socket.on('sendAnswers', (answers, user) => {})
 
   socket.on('disconnectUser', (user) => {
     users.splice(user, 1)
-    socket.emit('usersConnected', users)
+    io.emit('usersConnected', users)
   })
 
 
 
-  // // const startGame = users.every((user) => user.ok)
+  // const startGame = users.every((user) => user.ok)
 
   // socket.on('startGame', () => {
   //     console.log('startGame')
@@ -95,17 +85,15 @@ io.on('connection', (socket) => {
 
   // =================
   socket.on('start', () => {
-    console.log('start')
     const letter = getLetter()
     if (!timer) {
       timer = setInterval(() => {
         seconds++
-        socket.emit('seconds', seconds)
+        io.emit('seconds', seconds)
         console.log({seconds})
       }, 1000)
     }
-    socket.emit('letter', letter)
-    console.log({letter})
+    io.emit('letter', letter)
   })
 
 
@@ -113,6 +101,7 @@ io.on('connection', (socket) => {
     clearInterval(timer)
     timer = null
     seconds = 0
+    io.emit('stopGame')
   })
   // =================
 

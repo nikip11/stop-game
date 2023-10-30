@@ -17,9 +17,6 @@ const seconds = computed(() => store.getSeconds)
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap');
 #timer {
-    /* position: absolute;
-    top: 0;
-    right: 0; */
     padding: 25px;
     background-color: var(--primary);
     color: var(--white);
