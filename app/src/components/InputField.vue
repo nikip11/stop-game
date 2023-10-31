@@ -8,25 +8,23 @@
 defineProps<{id: string, disabled: boolean}>()
 </script>
 <style>
-@import url(https://fonts.googleapis.com/css?family=Bangers);
-/* .form-field {
-    margin-bottom: 10px;
-} */
-
+.form {
+    margin-top: 20px;
+}
 .form-field {
   display: flex;
   align-items: center;
+  margin: 10px 0px 0px;
 }
 
 .form-field label {
     display: inline-block;
-    width: 100px;
-    font-size: 20px;
+    width: 115px;
+    font-size: 24px;
     text-transform: capitalize;
     line-height: 16px;
 }
 .form-field input {
-  margin: 10px 0px;
   background:lavenderblush;
   border: solid #545454;
   border-color: #545454;

@@ -1,57 +1,47 @@
 <template>
   <Paper>
     <!-- step 1 -->
-    {{ connected }}
-    <WelcomeComponent />
+    <WelcomeComponent v-if="step === 1" @click="() => nextStep(2)"/>
     <!-- step 2 -->
-    <ConnectComponent />
-    <StartPageComponent @start="handleStart"/>
+    <ConnectComponent v-if="step === 2" @click="() => nextStep(3)"/>
     <!-- step 3 -->
-    <GameComponent  />
+    <StartPageComponent v-if="step === 3" @start="handleStart"/>
     <!-- step 4 -->
-    <FormComponent @stop="handleStop" :disabled="disabled" />
-    <!-- step 5 -->
-    <h1>{{ points }}</h1>
-    <div v-if="showForm">
-      <TestComponent />
-    </div>
+    <GameComponent v-if="step === 4" />
+    <!-- pagina de revisión -->
+    <!-- pagina de puntuaciones -->
   </Paper>
 </template>
 
 <script setup lang="ts">
-import FormComponent from '@/components/FormComponent.vue'
 import StartPageComponent from './components/StartPageComponent.vue'
 import GameComponent from '@/components/GameComponent.vue'
-import TestComponent from '@/components/TestComponent.vue'
-import { computed, ref } from 'vue';
 import ConnectComponent from '@/components/ConnectComponent.vue'
 import Paper from '@/components/PaperComponent.vue'
 import WelcomeComponent from './components/WelcomeComponent.vue';
 import { useSocket } from './composables/useSocket';
+import { ref } from 'vue';
 
-const { stop, start, state } = useSocket()
+const { start } = useSocket()
+
+const step = ref<number>(1)
+
+function nextStep(value: number): void {
+  step.value = value
+}
+
 
 // const disabled = ref(false)
-const connected = computed(() => state.connected)
 
-const disabled = computed(() => state.disabled)
 
-const showForm = ref(false)
+// const steps = 
 
-const points = ref(0)
 
 function handleStart() {
+  nextStep(4)
   start()
 }
 
-function handleStop() {
-  stop()
-  calculateResult()
-}
-
-function calculateResult() {
-
-}
 
 
 </script>

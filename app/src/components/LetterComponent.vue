@@ -17,6 +17,7 @@ defineProps<{letter: string}>()
     height: 75px;
     line-height: 52px;
     text-align: center;
-    margin: 25px 0px;
+    min-width: 100px;
+    height: 50px;
 }
 </style>
