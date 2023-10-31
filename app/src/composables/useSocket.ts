@@ -1,7 +1,7 @@
 import { useTimerStore } from "@/store/useTimerStore"
 import { User } from "@/types"
 import { io } from "socket.io-client"
-import { reactive, ref } from "vue"
+import { reactive } from "vue"
 
 type StateProps = {
   connected: boolean
