@@ -1,10 +1,6 @@
 import { ref, watch } from "vue"
 
-type Props = {
-  key: string
-  newValue?: unknown
-}
-export function useStorage(key: string, newValue: unknown = null) {
+export function useStorage(key: string, newValue: string = '') {
   const value = ref('')
   const storedValue = get()
 
@@ -16,14 +12,15 @@ export function useStorage(key: string, newValue: unknown = null) {
   }
 
   function get() {
+    // const isS
     if (localStorage.getItem(key) !== undefined) {
-      return JSON.parse(localStorage.getItem(key))
+      const data = localStorage.getItem(key) || ''
+      return JSON.parse(data)
     }
     return ''
   }
 
   function set() {
-    console.log({value: value.value, key})
     if (value.value === null || value.value === '' && value.value === undefined) {
       localStorage.removeItem(key)
     } else {

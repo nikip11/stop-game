@@ -10,19 +10,18 @@
 </template>
 
 <script setup lang="ts">
-import { formFields } from '@/types'
+import { formFields } from '@/helper.js'
 import Button from './ButtonComponent.vue';
 import InputField from './InputField.vue';
-import { Ref, ref } from 'vue';
+import { ref } from 'vue';
 
 const { disabled } = defineProps<{disabled: boolean}>()
 
 const emit = defineEmits(['stop'])
-const inputValues: Ref<{ [key: string]: any }> = ref({});
+const inputValues = ref<{ [key: string]: string }>({});
 
 function submitForm() {
-  console.log(inputValues.value)
-  emit('stop')
+  emit('stop', inputValues.value)
 }
 </script>
 

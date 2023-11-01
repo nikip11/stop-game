@@ -1,11 +1,23 @@
 <template>
     <div class="form-field">
         <label>{{id}}</label>
-        <input type="text" :id="id" :v-model="id" :disabled="disabled" />
+        <input type="text" :id="id" :disabled="disabled" :value="modelValue" @input="updateValue"/>
     </div>
 </template>
 <script setup lang="ts">
-defineProps<{id: string, disabled: boolean}>()
+defineProps<{
+    id: string, 
+    disabled: boolean, 
+    type?: { type: string, default: 'text'},
+    modelValue: unknown
+    }>()
+
+const emit = defineEmits(['update:modelValue']);
+
+function updateValue(event: Event) {
+    const inputValue = (event.target as HTMLInputElement).value;
+    emit('update:modelValue', inputValue);
+}
 </script>
 <style>
 .form {

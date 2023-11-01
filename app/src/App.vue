@@ -3,9 +3,9 @@
     <!-- step 1 -->
     <WelcomeComponent v-if="step === 1" @click="() => nextStep(2)"/>
     <!-- step 2 -->
-    <ConnectComponent v-if="step === 2" @click="() => nextStep(3)"/>
+    <ConnectComponent @click="() => nextStep(3)"/>
     <!-- step 3 -->
-    <StartPageComponent v-if="step === 3" @start="handleStart"/>
+    <StartPageComponent @start="handleStart"/>
     <!-- step 4 -->
     <GameComponent v-if="step === 4" />
     <!-- pagina de revisión -->

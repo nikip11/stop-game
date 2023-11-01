@@ -24,6 +24,26 @@ function getRoom() {
   return result;
 }
 
+function checkAnswers(answers, letter) {
+  const totalPoints = [];
+  Object.entries(answers).forEach(([key, value]) => {
+    const valid = startWith(value, letter);
+    const points = valid ? 100 : 0;
+    console.log({ key, value, valid, points });
+    totalPoints.push(points);
+  });
+  return totalPoints.reduce((a, b) => a + b, 0);
+}
+
+function startWith(name, initialLetter) {
+  const escapedInitialLetter = initialLetter.toLowerCase().replace(
+    /[.*+?^${}()|[\]\\]/g,
+    '\\$&'
+  );
+  const regex = new RegExp(`^${escapedInitialLetter}[A-Za-z]{2,}$`);
+  return regex.test(name.toLowerCase());
+}
+
 const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 function getLetter(){
   const randomIndex = Math.floor(Math.random() * letters.length);
@@ -41,12 +61,6 @@ let seconds = 0
 let timer = null
 
 io.on('connection', (socket) => {
-  // const room = getRoom()
-  // socket.emit('room', room)
-
-  // const letter = getLetter()
-  // socket.emit('letter', letter)
-
   io.emit('usersConnected', users)
 
   socket.on('connectToRoom', (user) => {
@@ -58,32 +72,11 @@ io.on('connection', (socket) => {
     io.emit('usersConnected', users)
   })
 
-
-  // socket.on('sendAnswers', (answers, user) => {})
-
   socket.on('disconnectUser', (user) => {
     users.splice(user, 1)
     io.emit('usersConnected', users)
   })
 
-
-
-  // const startGame = users.every((user) => user.ok)
-
-  // socket.on('startGame', () => {
-  //     console.log('startGame')
-  //     // start time
-  //     // - emit start
-  //     socket.emit('startGame')
-  //     // emit every secounds to show timer
-  // })
-
-  // socket.on('stopGame', () => {
-  //     // stop time
-  //     // disabled every field
-  // })
-
-  // =================
   socket.on('start', () => {
     const letter = getLetter()
     if (!timer) {
@@ -97,14 +90,16 @@ io.on('connection', (socket) => {
   })
 
 
-  socket.on('stop', () => {
+  socket.on('stop', ({answer, user, letter}) => {
     clearInterval(timer)
     timer = null
     seconds = 0
-    io.emit('stopGame')
+    // console.log({answer, user})
+    io.emit('stopGame', user)
+    const points = checkAnswers(answer, letter)
+    console.log({points})
+    io.emit('points', points)
   })
-  // =================
-
 
   // socket.on('disconnect', () => {
   //   console.log('Cliente desconectado');

@@ -8,6 +8,7 @@
       <input type="text" id="user" v-model="user">
       <Button @click="() => handleConnectToRoom()" :disabled="user === ''">Conectar</Button>
     </div>
+      <!-- <Button @click="() => handleConnectToRoom()" :disabled="user === ''">Conectar</Button> -->
     <ConnectedUsersComponent :users="connectedUsers" />
   </div>
 </template>
@@ -25,11 +26,8 @@ const { state, connectToRoom, disconnectUser } = useSocket()
 const emit = defineEmits(['click'])
 
 const connectedUsers = computed(() => state.connectedUsers)
-
 const user = useStorage('user')
-
 const showForm = ref(!user.value)
-
 const room = computed(() => state.room)
 const users = ref(computed(() => state.connectedUsers))
 
@@ -52,7 +50,7 @@ function handleRemoveUser() {
 
 function handleConnectToRoom() {
   showForm.value = false
-  connectToRoom(user.value, room)
+  connectToRoom(user.value, room.value)
   emit('click')
 }
 
