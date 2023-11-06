@@ -15,14 +15,14 @@ const showToast = (newMessage: string, duration: number = 3000) => {
 }
 
 defineExpose({
-    showToast
+  showToast
 })
 
 </script>
 <template>
-<div v-if="show" class="toast-notification">
+  <div v-if="show" class="toast-notification">
     <h1>{{ message }}</h1>
-</div>
+  </div>
 </template>
 
 <style scoped>

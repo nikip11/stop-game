@@ -1,10 +1,12 @@
 <script setup lang="ts">
-defineProps<{users: []}>()
+import { User } from '@/types';
+
+defineProps<{ users: User[] }>()
 </script>
 <template>
   <h2>Jugadores conectados</h2>
   <ul>
-    <li v-for="user in users" :key="user">{{ user }} <span>ok</span></li>
+    <li v-for="user in users" :key="user.name">{{ user.name }} <span v-if="user.ready">ready</span></li>
   </ul>
 </template>
 
@@ -12,9 +14,11 @@ defineProps<{users: []}>()
 h2 {
   margin-bottom: 0px;
 }
+
 ul {
   margin: 0;
 }
+
 span {
   padding: 2px 5px;
   font-size: 12px;

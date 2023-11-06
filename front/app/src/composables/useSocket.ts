@@ -25,6 +25,7 @@ type ResponseSocket = {
   disconnectUser: (user: User) => void
   start: () => void
   stop: (formValue: FormInputs) => void
+  userReady: (user: string) => void
 }
 
 const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000"
@@ -39,7 +40,7 @@ export function useSocket(): ResponseSocket {
     letter: null,
     seconds: 0,
     room: null,
-    start: () => {},
+    start: () => { },
     connectedUsers: [],
     disabled: false,
     userStop: '',
@@ -73,8 +74,8 @@ export function useSocket(): ResponseSocket {
   }
 
   const stop = (formValue: FormInputs) => {
-    console.log({answer: formValue})
-    socket.emit('stop', {answer: formValue, user: user.value, letter: state.letter})
+    console.log({ answer: formValue })
+    socket.emit('stop', { answer: formValue, user: user.value, letter: state.letter })
   }
 
   socket.on('stopGame', (user) => {
@@ -99,12 +100,20 @@ export function useSocket(): ResponseSocket {
   }
 
   const connectToRoom = (user: User, room: string) => {
-    console.log({room})
+    console.log({ room })
     socket.emit('connectToRoom', user)
   }
 
   const userPrepared = (user: User) => {
     socket.emit('userPrepared', user)
+  }
+
+  socket.on('allUserReady', () => {
+    console.log('ready')
+  })
+
+  const userReady = (user: string) => {
+    socket.emit('userReady', user)
   }
 
   // temporales
@@ -119,6 +128,7 @@ export function useSocket(): ResponseSocket {
     connectUser,
     connectToRoom,
     disconnectUser,
-    userPrepared
+    userPrepared,
+    userReady
   }
 }

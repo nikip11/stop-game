@@ -14,7 +14,7 @@ export function useStorage(key: string, newValue: string = '') {
   function get() {
     // const isS
     if (localStorage.getItem(key) !== undefined) {
-      const data = localStorage.getItem(key) || ''
+      const data = localStorage.getItem(key)
       return JSON.parse(data)
     }
     return ''

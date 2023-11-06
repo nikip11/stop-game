@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  
+  stop_game:
+    build: .
+    working_dir: /app
+    container_name: stop_game
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
+    environment:
+      - PORT=8000
+    volumes:
+      - ./app/:/app
+    tty: true
+    init: true
+    command: yarn dev

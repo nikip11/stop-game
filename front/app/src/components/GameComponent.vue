@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import FormComponent from '@/components/FormComponent.vue'
+import FormComponent from '@/components/form/FormComponent.vue'
 import TimerComponent from '@/components/TimerComponent.vue'
 import ToastComponent from '@/components/ToastComponent.vue'
 import { useTimerStore } from '@/store/useTimerStore';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import LetterComponent from './LetterComponent.vue';
 import { useSocket } from '@/composables/useSocket';
 import { FormInputs } from '@/types';
+import ButtonComponent from './form/ButtonComponent.vue';
 
 const store = useTimerStore()
 const { stop, state } = useSocket()
@@ -21,11 +22,15 @@ const toastNotification = ref(null)
 
 function handleStop(formValues: FormInputs) {
   stop(formValues)
+}
+
+watch(userStop, (newValue) => {
+  console.log({ newValue })
   if (toastNotification.value) {
     const msg = `${userStop.value} ha pulsado STOP`
     toastNotification.value.showToast(msg, 3000)
   }
-}
+})
 
 </script>
 
@@ -33,11 +38,12 @@ function handleStop(formValues: FormInputs) {
   <div class="game-container">
     <div class="game-header">
       <LetterComponent :letter="letter" />
-      <TimerComponent/>
+      <TimerComponent />
     </div>
     <FormComponent @stop="handleStop" :disabled="disabled" />
     <ToastComponent ref="toastNotification" />
     <h1>{{ points }}</h1>
+    <ButtonComponent>Siguiente partida</ButtonComponent>
   </div>
 </template>
 
