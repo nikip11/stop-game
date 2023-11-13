@@ -23,11 +23,9 @@ function handleClick() {
 <style>
 #logo {
   font-size: 5em;
+  line-height: 30px;
 }
 
-.welcome h1 {
-  font-size: 3.5em;
-}
 
 .connected {
   position: absolute;

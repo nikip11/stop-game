@@ -1,13 +1,10 @@
 import { defineStore } from 'pinia';
-// import type { User } from '@/types'
-
-// const user = useStorage('user')
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-     user: '',
-     points: 0,
-     totalPoints: 0
+    user: '',
+    points: 0,
+    totalPoints: 0
   }),
   actions: {
     setUser(user: string) {
@@ -20,7 +17,7 @@ export const useUserStore = defineStore('user', {
       this.totalPoints = totalPoints
     },
     resetUser() {
-        this.user = ''
+      this.user = ''
     }
   },
   getters: {

@@ -6,31 +6,39 @@ import { useTimerStore } from '@/store/useTimerStore';
 import { computed, ref, watch } from 'vue';
 import LetterComponent from './LetterComponent.vue';
 import { useSocket } from '@/composables/useSocket';
-import { FormInputs } from '@/types';
 import ButtonComponent from './form/ButtonComponent.vue';
+import { useFormStore } from '@/store/useFormStore';
 
 const store = useTimerStore()
-const { stop, state } = useSocket()
+const { stop, state, sendAnswers } = useSocket()
+
+const emit = defineEmits(['stop'])
 
 const letter = computed(() => store.getLetter)
 
 const disabled = computed(() => state.disabled)
 const userStop = computed(() => state.userStop)
-const points = computed(() => state.points)
 const toastNotification = ref(null)
 
+const fields = useFormStore()
 
-function handleStop(formValues: FormInputs) {
-  stop(formValues)
+
+function handleStop() {
+  stop()
 }
 
-watch(userStop, (newValue) => {
-  console.log({ newValue })
+watch(userStop, () => {
   if (toastNotification.value) {
     const msg = `${userStop.value} ha pulsado STOP`
     toastNotification.value.showToast(msg, 3000)
+
+    sendAnswers(fields.getFields)
   }
 })
+
+function handleClick() {
+  emit('stop')
+}
 
 </script>
 
@@ -41,9 +49,8 @@ watch(userStop, (newValue) => {
       <TimerComponent />
     </div>
     <FormComponent @stop="handleStop" :disabled="disabled" />
+    <ButtonComponent @click="handleClick" v-if="disabled">Ver puntuaciones</ButtonComponent>
     <ToastComponent ref="toastNotification" />
-    <h1>{{ points }}</h1>
-    <ButtonComponent>Siguiente partida</ButtonComponent>
   </div>
 </template>
 

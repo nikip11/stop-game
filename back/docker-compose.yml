@@ -5,6 +5,7 @@ services:
     build: .
     container_name: node_server
     working_dir: /app
+    tty: true
     volumes:
       - ./server:/app
     ports:
@@ -14,7 +15,13 @@ services:
     environment:
       - NODE_ENV=production
     command: npm start
-  
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
   # mongo:
   #   image: mongo
   #   ports:

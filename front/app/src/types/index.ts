@@ -1,7 +1,8 @@
 export interface User {
   name: string
   ready?: boolean
-  total?: number
+  points?: number
+  totalPoints?: number
 }
 
 export interface FormInputs {

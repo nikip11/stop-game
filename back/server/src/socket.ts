@@ -1,19 +1,13 @@
 const socketIo = require('socket.io');
 import { getLetter, checkAnswers } from "./helpers";
 import { server } from './routes'
+import { addUser, allUserStop, checkAllUsersAnswer, checkUserAnswers, editUser, getUser, getUsers, hasMultiUsers, removeUser, User } from "./user";
 
 export const io = socketIo(server, {
   cors: {
     origin: "*"
   }
 })
-type User = {
-  name: string
-  ready?: boolean
-  points?: number
-  totalPoints?: number
-}
-const users: User[] = []
 
 let seconds = 0
 let timer: NodeJS.Timeout | null = null
@@ -21,27 +15,24 @@ let timer: NodeJS.Timeout | null = null
 type StopProps = {
   answer: {}
   letter: string
-  user: string
+  username: string
 }
 
-export function startIo(socket: any) {
+export async function startIo(socket: any) {
+  const users = await getUsers()
   io.emit('usersConnected', users)
 
-  socket.on('connectToRoom', (user: string) => {
-    const find = users.find(element => element.name === user)
-    if (find) {
-      socket.emit('User exist')
+  socket.on('connectToRoom', async (username: string) => {
+    if (username !== '') {
+      await addUser(username)
     }
-    users.push({ name: user })
+    const users = await getUsers()
     io.emit('usersConnected', users)
   })
 
-  socket.on('disconnectUser', (user: string) => {
-    const index = users.findIndex(element => element.name === user)
-    if (index !== -1) {
-      users.splice(index, 1)
-    }
-    console.log({ users, index, user })
+  socket.on('disconnectUser', async (user: string) => {
+    await removeUser(user)
+    const users = await getUsers()
     io.emit('usersConnected', users)
   })
 
@@ -50,17 +41,17 @@ export function startIo(socket: any) {
     io.emit('allUserReady')
   }
 
-  socket.on('userReady', (user: string) => {
-    const find = users.find(element => element.name === user)
-    if (find) {
-      find.ready = true
+  socket.on('userReady', async (username: string) => {
+    const user = await getUser(username)
+    if (user) {
+      await editUser({ ...user, ready: true, answers: undefined })
     }
-    console.log({ users })
+    const users = await getUsers()
+    console.log({ users, user })
     io.emit('usersConnected', users)
   })
 
   socket.on('start', () => {
-
     if (!timer) {
       const letter = getLetter()
       timer = setInterval(() => {
@@ -73,21 +64,37 @@ export function startIo(socket: any) {
   })
 
 
-  socket.on('stop', ({ answer, user, letter }: StopProps) => {
+  socket.on('stop', (user: string) => {
     if (timer !== null) {
       clearInterval(timer)
     }
     timer = null
     seconds = 0
-    // console.log({answer, user})
     io.emit('stopGame', user)
-    const points = checkAnswers(answer, letter)
-    const currentUser = users.find((u: User) => u.name = user)
-    currentUser!.points = points
-
-    // console.log({ points })
-    // io.emit('points', points)
   })
+
+  socket.on('sendAnswers', async ({ answer, username, letter }: StopProps) => {
+    const checkMultiUsers = await hasMultiUsers()
+    console.log({ checkMultiUsers })
+
+    const user = await getUser(username)
+    if (user) {
+      await editUser({ ...user, ready: false, answers: answer })
+    }
+
+    await checkAllUsersAnswer(letter)
+
+    // if (checkMultiUsers) {
+    //   await checkAllUsersAnswer(letter)
+    // } else {
+    //   await checkUserAnswers(username, letter, answer)
+    // }
+    const users = await getUsers()
+    console.log({ users })
+    io.emit('usersConnected', users)
+  })
+
+
 
   // socket.on('disconnect', () => {
   //   console.log('Cliente desconectado');

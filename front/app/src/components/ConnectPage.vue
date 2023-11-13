@@ -4,13 +4,14 @@
       <div v-if="!showForm">
         Hola, {{ user }}
         <button @click="handleRemoveUser">no eres tu?</button>
+        <p>cuando todos los jugadores esten listos comenzará la partida</p>
+        <Button @click="() => handleClickReady()" v-if="!showForm && showReadyBtn">Ready?</Button>
       </div>
       <div v-else class="dflex">
-        <input type="text" id="user" v-model="user">
+        <input type="text" id="userField" v-model="user">
         <Button @click="() => handleConnectToRoom()" :disabled="user === ''">Conectar</Button>
       </div>
-      <ConnectedUsersComponent :users="connectedUsers" />
-      <Button @click="() => handleClickReady()" v-if="!showForm && showReadyBtn">Ready?</Button>
+      <ConnectedUsersComponent v-if="connectedUsers.length > 0" :users="connectedUsers" />
 
     </div>
     <div v-else>
@@ -31,7 +32,7 @@ import ConnectedUsersComponent from './ConnectedUsersComponent.vue';
 import Button from '@/components/form/ButtonComponent.vue';
 import { User } from '@/types';
 
-const count = ref(4)
+const count = ref(3)
 const showPrepared = ref(false)
 
 const { state, connectToRoom, disconnectUser, userReady } = useSocket()
@@ -46,35 +47,26 @@ const room = computed(() => state.room)
 const users = ref(computed(() => state.connectedUsers))
 
 onMounted(() => {
-  checkIfUserIsConected()
+  connectToRoom(user.value, room.value)
 })
-
-function checkIfUserIsConected() {
-  const userConected = users.value.find(u => u === user)
-  if (!userConected) {
-    handleRemoveUser()
-  }
-}
 
 function handleRemoveUser() {
   disconnectUser(user.value)
   showForm.value = true
   user.value = ''
+  showReadyBtn.value = true
 }
 
 function handleConnectToRoom() {
   showForm.value = false
   connectToRoom(user.value, room.value)
-  // emit('click')
 }
 
 function handleClickReady() {
   // hide button
   showReadyBtn.value = false
-  // text when all readyp
   // emit user prepared
   userReady(user.value)
-
 }
 
 function startCountdown() {
@@ -91,7 +83,6 @@ function startCountdown() {
 watch(users, (newValue) => {
   const checkUser = newValue.find((element: User) => element.name === user.value)
   const allReady = newValue.every((element: User) => element.ready)
-  console.log({ newValue, allReady })
   if (allReady && checkUser) {
     startCountdown()
   }
@@ -100,15 +91,15 @@ watch(users, (newValue) => {
 </script>
 
 <style>
-#user {
+#userField {
   background-color: white;
   border: 4px solid rgba(3, 3, 3, 0.6);
   display: block;
   width: 250px;
   margin-bottom: 15px;
-  padding: 5px 10px;
+  padding: 9px 13px;
   color: black;
-  font-size: 2.5em;
+  font-size: 2em;
   border-radius: 4px;
 }
 
@@ -120,5 +111,10 @@ watch(users, (newValue) => {
 
 .dflex {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 }
 </style>

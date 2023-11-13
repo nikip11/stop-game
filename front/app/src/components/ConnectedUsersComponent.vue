@@ -17,6 +17,8 @@ h2 {
 
 ul {
   margin: 0;
+  list-style: circle;
+  display: inline-block;
 }
 
 span {
