@@ -1,8 +1,8 @@
 <template>
   <div class="form">
     <form @submit.prevent="submitForm">
-      <InputField :id="field" :disabled="disabled" v-for="field in formFields" :key="field"
-        v-model="inputValues[field]" />
+      <InputField :id="field" :disabled="disabled" v-for="field in formFields" :key="field" v-model="inputValues[field]"
+        :result="result ? result[field] : ''" />
       <div class="submit-btn">
         <Button type="submit" :disabled="disabled">Stop</Button>
       </div>
@@ -17,7 +17,7 @@ import InputField from './InputField.vue';
 import { ref, watch } from 'vue';
 import { useFormStore } from '@/store/useFormStore';
 
-const { disabled } = defineProps<{ disabled: boolean }>()
+defineProps<{ disabled: boolean, result: { [key: string]: { points?: number } } }>()
 
 const emit = defineEmits(['stop'])
 const inputValues = ref<{ [key: string]: string }>({});

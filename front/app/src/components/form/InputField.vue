@@ -2,14 +2,24 @@
   <div class="form-field type-2">
     <label>{{ id }}</label>
     <input type="text" :id="id" :disabled="disabled" :value="modelValue" @input="updateValue" />
+
+    <div v-if="result" class="fields-points">{{ result.points }}</div>
+    <!-- <div v-if="result" class="fields-reason">{{ result.reason }}</div> -->
   </div>
 </template>
 <script setup lang="ts">
+
+type ResultInput = {
+  value: string
+  points: number
+  reason: string
+}
 defineProps<{
   id: string,
   disabled: boolean,
   type?: { type: string, default: 'text' },
-  modelValue: unknown
+  modelValue: unknown,
+  result: ResultInput | null
 }>()
 
 const emit = defineEmits(['update:modelValue']);
@@ -23,6 +33,10 @@ function updateValue(event: Event) {
 .form {
   margin-top: 20px;
   width: 90%;
+}
+
+.form-field {
+  position: relative;
 }
 
 .form-field.type-2 {
@@ -43,8 +57,9 @@ function updateValue(event: Event) {
 
 .form-field.type-2 input {
   text-transform: uppercase;
-  background-color: transparent;
-  color: #333;
+  background-color: white;
+  /* background-color: transparent; */
+  color: var(--blue);
   font-weight: bold;
   font-family: 'Patrick hand';
   border: none;
@@ -54,8 +69,11 @@ function updateValue(event: Event) {
   width: 205px;
 }
 
-/* ============================================= */
+.form-field.type-2 input:disabled {
+  background-color: transparent;
+}
 
+/* ============================================= */
 
 .form-field.type-1 {
   display: flex;
@@ -86,11 +104,23 @@ function updateValue(event: Event) {
 }
 
 .form-field.type-1 input:disabled {
-  background-color: cadetblue;
-
+  background-color: transparent;
 }
 
 *:focus {
   outline: none;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@900&display=swap');
+
+.fields-points {
+  font-family: 'Roboto Slab', serif;
+  font-weight: bold;
+  color: var(--blue);
+  position: absolute;
+  right: 0px;
+  bottom: 3px;
+  padding: 2px;
+  border-radius: 4px;
 }
 </style>

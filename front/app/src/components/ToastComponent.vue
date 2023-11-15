@@ -28,11 +28,17 @@ defineExpose({
 <style scoped>
 .toast-notification {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #333;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 10px;
-  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  /* border-radius: 4px; */
 }
 </style>

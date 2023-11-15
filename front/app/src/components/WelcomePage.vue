@@ -1,7 +1,7 @@
 <template>
   <div class="connected">{{ connected }}</div>
   <div class="welcome page">
-    <h1 id="logo">STOP</h1>
+    <LogoComponent />
     <h1>Bienvenidos</h1>
     <Button @click="handleClick" v-if="connected">Comenzamos</Button>
     <div v-else>Hay algún problema con el servidor</div>
@@ -11,6 +11,7 @@
 import Button from '@/components/form/ButtonComponent.vue';
 import { useSocket } from '@/composables/useSocket';
 import { computed } from 'vue';
+import LogoComponent from './LogoComponent.vue';
 
 const { state } = useSocket()
 const connected = computed(() => state.connected)

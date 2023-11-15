@@ -1,6 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Loved+by+the+King&family=Mukta:wght@500;800&display=swap');
 @import url("https://fonts.googleapis.com/css?family=Patrick+Hand");
 
+@font-face {
+  font-family: 'HandWrite';
+  src: url('../public/fonts/HandWrite.woff') format('woff'),
+    url('./public/fonts/HandWrite.woff2') format('woff2'),
+    url('./public/fonts/HandWrite.eot'),
+    url('./public/fonts/HandWrite.eot?#iefix') format('embedded-opentype'),
+    url('./public/fonts/HandWrite.otf') format('truetype');
+
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* font-family: 'Open Sans', sans-serif; */
   /* font-family: 'Loved by the King', cursive; */
@@ -10,18 +23,19 @@
 
   color-scheme: light dark;
 
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   background-color: #1373A9;
-  color: rgba(0, 0, 0, 0.87);
+  /* color: rgba(0, 0, 0, 0.87); */
+  color: #023e7d;
   --primary: rgb(201, 18, 18);
   --secundary: purple;
   --white: #f1f1f1;
   --black: #333333;
+  --blue: #023e7d;
 }
 
 body {

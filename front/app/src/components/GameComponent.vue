@@ -16,7 +16,11 @@ const emit = defineEmits(['stop'])
 
 const letter = computed(() => store.getLetter)
 
-const disabled = computed(() => state.disabled)
+const disabled = computed(() => {
+  console.log({ state })
+  return state.disabled
+})
+// const result = computed(() => state.connectedUsers)
 const userStop = computed(() => state.userStop)
 const toastNotification = ref(null)
 

@@ -67,7 +67,7 @@ export const editUser1 = async (username: string, args: {}): Promise<User | null
 }
 
 export const editUser = async (user: User): Promise<User | null> => {
-  console.log({ user })
+  console.log('editUser', { user })
   const users = await getUsers()
   const index = users.findIndex(element => element.name === user.name)
   if (index !== -1) {
@@ -156,7 +156,7 @@ export const checkAllUsersAnswer = async (letter: string) => {
     }
     user.lastGameResults = lastGameResults;
     user.totalPoints += user.points
-    console.log({ user })
+    console.log('checkAllUsersAnswer', { user })
     await editUser(user)
   });
 }
